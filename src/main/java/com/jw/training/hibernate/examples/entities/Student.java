@@ -1,6 +1,9 @@
 package com.jw.training.hibernate.examples.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "students")
@@ -14,6 +17,9 @@ public class Student {
 
     @OneToOne
     private Backpack backpack;
+
+    @ManyToMany(mappedBy = "students", fetch = FetchType.EAGER)
+    private Set<Professor> professors;
 
     public String getName() {
         return name;
@@ -39,12 +45,30 @@ public class Student {
         this.backpack = backpack;
     }
 
+    public Set<Professor> getProfessors() {
+        return professors;
+    }
+
+    public void setProfessors(Set<Professor> professors) {
+        this.professors = professors;
+    }
+
+    public void addProfessor(Professor professor) {
+        if (professors == null) professors = new HashSet<>();
+        professors.add(professor);
+    }
+
     @Override
     public String toString() {
         return "Student{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", backpack=" + backpack +
+                ", professors= " + professorNames() +
                 '}';
+    }
+
+    private String professorNames() {
+        return professors.stream().map(pr -> String.format("%s %s %s ", pr.getTitle(), pr.getName(), pr.getSurname())).collect(Collectors.joining());
     }
 }

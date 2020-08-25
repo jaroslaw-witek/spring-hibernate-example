@@ -35,3 +35,4 @@ build/
 /mvnw
 /.idea/
 /.mvn/
+/.mvn/wrapper/
